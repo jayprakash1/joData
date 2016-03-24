@@ -52,6 +52,20 @@
             }
         };
 
+        this.SearchSettings = {
+            Search : null,
+            DefaultSearch: null,
+            toString: function () {
+                return '$search=' + (this.Search !== null ? this.Search : this.DefaultSearch);
+            },
+            reset: function () {
+                this.Search= null;
+            },
+            isSet: function () {
+                return this.Search !== null || this.DefaultSearch !== null;
+            }
+        };
+
         this.SkipSettings = {
             Skip: null,
             DefaultSkip: null,
@@ -260,6 +274,18 @@
             this.TopSettings.reset();
             return this;
         },
+        setSearchDefault: function (search) {
+            this.SearchSettings.DefaultSearch = search;
+            return this;
+        },
+        search: function (search) {
+            this.SearchSettings.Search = search;
+            return this;
+        },
+        resetSearch: function () {
+            this.SearchSettings.reset();
+            return this;
+        },
         setSkipDefault: function (skip) {
             this.SkipSettings.DefaultSkip = skip;
             return this;
@@ -450,6 +476,10 @@
                 components.push(this.TopSettings.toString());
             }
 
+            if (this.SearchSettings.isSet()) {
+                components.push(this.SearchSettings.toString());
+            }
+
             if (this.SkipSettings.isSet()) {
                 components.push(this.SkipSettings.toString());
             }
@@ -484,6 +514,7 @@
 
             jsonObj.OrderBySettings = null;
             jsonObj.TopSettings = null;
+            jsonObj.SearchSettings = null;
             jsonObj.SkipSettings = null;
             jsonObj.SelectSettings = null;
             jsonObj.ExpandSettings = null;
@@ -499,6 +530,10 @@
 
             if (this.TopSettings.isSet()) {
                 jsonObj.TopSettings = this.TopSettings;
+            }
+
+            if (this.SearchSettings.isSet()) {
+                jsonObj.SearchSettings = this.SearchSettings;
             }
 
             if (this.SkipSettings.isSet()) {
@@ -564,6 +599,14 @@
             for (key in json.TopSettings) {
                 if (json.TopSettings.hasOwnProperty(key)) {
                     joDataObj.TopSettings[key] = json.TopSettings[key];
+                }
+            }
+        }
+
+        if (json.SearchSettings !== null) {
+            for (key in json.SearchSettings) {
+                if (json.SearchSettings.hasOwnProperty(key)) {
+                    joDataObj.SearchSettings[key] = json.SearchSettings[key];
                 }
             }
         }
